@@ -10,6 +10,7 @@ module.exports = {
     TodoService.getTodos(function(todos) {
       res.json(todos);
     });
+    console.log("getTodos");
   },
 
   addTodo: function(req, res) {
@@ -17,6 +18,7 @@ module.exports = {
     TodoService.addTodo(todoVal, function(success) {
       res.json(success);
     });
+    console.log("addTodo");
   },
 
   removeTodo: function(req, res) {
@@ -24,6 +26,7 @@ module.exports = {
     TodoService.removeTodo(todoVal, function(success) {
       res.json(success);
     })
+    console.log("removeTodo");
   }
 };
 
