@@ -36,3 +36,4 @@ node_modules
 .idea
 
 bower_components
+.tmp
