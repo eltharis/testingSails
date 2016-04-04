@@ -1,1 +1,13 @@
+<div class="navbar navbar-default">
+  <div class="navbar-header">
+    <a class="navbar-brand" href="#">Todo App</a>
+  </div>
+  <div id="navbar" class="navbar-collapse collapse" ng-controller="LoginCtrl as loginpanel">
+    <ul class="nav navbar-nav navbar-right">
+      <li><input type="text" placeholder="Email" ng-model="formData.email"></li>
+      <li><input type="password" placeholder="Password" ng-model="formData.password"></li>
+      <li><button type="button" class="btn btn-info" ng-click="login()">Zaloguj</button></li>
+    </ul>
+  </div>
+</div>
 <div ng-view></div>
