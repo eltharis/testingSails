@@ -5,61 +5,71 @@
 'use strict';
 
 angular.module('todo.TodoModule', ['ngRoute', 'ui.bootstrap'])
-  .config(['$routeProvider', function($routeProvider) {
-    $routeProvider.when('/', {
+  .config(['$routeProvider', function ($routeProvider) {
+    $routeProvider.when('/todo', {
       templateUrl: 'templates/todo.html',
-      controller: 'TodoCtrl'
+      controller: 'TodoCtrl',
+      resolve: {
+        load: ["$q", "LoginService", function ($q, LoginService) {
+          var defer = $q.defer();
+          var result = LoginService.isLoggedIn(null, function (response) {
+            console.log(response);
+            if(response.authenticated) {
+              defer.resolve();
+            }else{
+              defer.reject("not_logged_in");
+            }
+          });
+          return defer.promise;
+        }]
+      }
     });
   }])
-  .controller('TodoCtrl', ['$scope', '$rootScope', 'TodoService', function($scope, $rootScope, TodoService) {
+  .controller('TodoCtrl', ['$scope', '$rootScope', '$location', 'LoginService', 'TodoService', function ($scope, $rootScope, $location, LoginService, TodoService) {
     $scope.formData = {};
     $scope.todos = [];
 
-    TodoService.getTodos().then(function (response) {
-      $scope.todos = response;
-    });
+    $scope.todos = TodoService.getTodos();
 
-    $scope.addTodo = function() {
-      TodoService.addTodo($scope.formData).then(function(response) {
+    $scope.addTodo = function () {
+      TodoService.addTodo($scope.formData).$promise.then(function (response) {
         $scope.todos.push($scope.formData);
         $scope.formData = {};
       });
     };
 
-    $scope.removeTodo = function(todo) {
-      TodoService.removeTodo(todo).then(function(response) {
+    $scope.removeTodo = function (todo) {
+      TodoService.removeTodo(todo).$promise.then(function (response) {
         $scope.todos.splice($scope.todos.indexOf(todo), 1);
       });
     };
-  }])
-  .service('TodoService', function($http, $q) {
-    return {
-      'getTodos': function() {
-        var defer = $q.defer();
-        $http.get('/todo/getTodos').success(function (response) {
-          defer.resolve(response);
-        }).error(function (error) {
-          defer.reject(error);
-        });
-        return defer.promise;
-      },
-      'addTodo': function(todo) {
-        var defer = $q.defer();
-        $http.post('/todo/addTodo', todo).success(function(resp){
-          defer.resolve(resp);
-        }).error( function(err) {
-          defer.reject(err);
-        });
-        return defer.promise;
-      },
-      'removeTodo': function(todo) {
-        var defer = $q.defer();
-        $http.post('/todo/removeTodo', todo).success(function(resp){
-          defer.resolve(resp);
-        }).error( function(err) {
-          defer.reject(err);
-        });
-        return defer.promise;
-      }
+
+    $scope.logout = function () {
+      LoginService.logout(null, function (response) {
+        $location.path("/");
+      });
     }
-  });
+  }])
+  .service('TodoService', ['$resource', function ($resource) {
+    return $resource('/api/todo', null, {
+      getTodos: {
+        method: 'GET',
+        url: '/todo/getTodos',
+        isArray: true
+      },
+      addTodo: {
+        method: 'POST',
+        url: '/todo/addTodo',
+        params: {
+          value: '@value'
+        }
+      },
+      deleteTodo: {
+        method: 'DELETE',
+        url: '/todo/deleteTodo',
+        params: {
+          value: '@value'
+        }
+      }
+    });
+  }]);

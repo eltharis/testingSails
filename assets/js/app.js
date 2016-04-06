@@ -11,4 +11,14 @@ angular.module('todoApp', ['ngRoute', 'ui.bootstrap', 'todo.TodoModule', 'todo.L
       redirectTo: '/',
       caseInsensitiveMatch: true
     })
-  }]);
+  }])
+  .run(function($rootScope, $location, LoginService) {
+    $rootScope.$on( "$routeChangeError", function(event, current, previous, rejection) {
+      //noinspection JSValidateTypes
+      if(rejection === "not_logged_in") {
+        $location.path("/");
+      }else if(rejection === "logged_in") {
+        $location.path("/todo")
+      }
+    })
+  });

@@ -4,30 +4,51 @@
 
 'use strict';
 
-angular.module('todo.LoginModule', [])
-  .config([function () {
-
+angular.module('todo.LoginModule', ['ngRoute', 'ngResource', 'ui.bootstrap'])
+  .config(['$routeProvider', function ($routeProvider) {
+    $routeProvider.when('/', {
+      templateUrl: 'templates/login.html',
+      controller: 'LoginCtrl',
+      resolve: {
+        load: ["$q", "LoginService", function ($q, LoginService) {
+          var defer = $q.defer();
+          var result = LoginService.isLoggedIn(null, function (response) {
+            console.log(response);
+            if(!response.authenticated) {
+              defer.resolve();
+            }else{
+              defer.reject("logged_in");
+            }
+          });
+          return defer.promise;
+        }]
+      }
+    });
   }])
-  .controller('LoginCtrl', ['$scope', '$rootScope', 'LoginService', function ($scope, $rootScope, LoginService) {
+  .controller('LoginCtrl', ['$scope', '$rootScope', '$location', 'LoginService', function ($scope, $rootScope, $location, LoginService) {
+
     $scope.formData = {};
 
     $scope.login = function () {
-      LoginService.login($scope.formData).then(function (response) {
-        console.log(response);
-      })
+      var user = LoginService.login($scope.formData);
+      $location.path('/todo');
     }
   }])
-  .service('LoginService', function ($http, $q) {
-    return {
-      'login': function (data) {
-        var defer = $q.defer();
-        $http.post('/auth/login', data).success(function (response) {
-          defer.resolve(response);
-        })
-        .error(function (response) {
-          defer.reject(response);
-        });
-        return defer.promise;
-      }
-    }
-  });
+  .service('LoginService', ['$resource', function ($resource) {
+    return $resource('/auth/', null,
+      {
+        'isLoggedIn': {
+          method: 'GET',
+          url: '/auth/isLoggedIn'
+        },
+        'login': {
+          method: 'POST',
+          url: '/auth/login'
+        },
+        'logout': {
+          method: 'GET',
+          url: '/auth/logout'
+        }
+      })
+
+  }]);
