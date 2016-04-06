@@ -34,3 +34,6 @@ node_modules
 
 #IDEA files
 .idea
+
+bower_components
+.tmp
