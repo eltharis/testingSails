@@ -65,12 +65,12 @@ angular.module('todo.TodoModule', ['ngRoute', 'ui.bootstrap'])
         }
       },
       removeTodo: {
-        method: 'DELETE',
+        method: 'POST',
         url: '/todo/removeTodo',
-        isArray: true,
         params: {
           value: '@value'
-        }
+        },
+        isArray: true
       }
     });
   }]);

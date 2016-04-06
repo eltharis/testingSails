@@ -25,7 +25,7 @@ module.exports = {
     var todoVal = (req.body.value) ? req.body.value : undefined;
     TodoService.removeTodo(todoVal, function(success) {
       res.json(success);
-    })
+    });
     console.log("removeTodo");
   }
 };
