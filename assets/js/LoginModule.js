@@ -4,23 +4,14 @@
 
 'use strict';
 
-angular.module('todo.LoginModule', ['ngRoute', 'ngResource', 'ui.bootstrap'])
+angular.module('todo.LoginModule', ['ngRoute', 'ngResource', 'ui.bootstrap', 'todo.PermissionModule'])
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/', {
       templateUrl: 'templates/login.html',
       controller: 'LoginCtrl',
       resolve: {
-        load: ["$q", "LoginService", function ($q, LoginService) {
-          var defer = $q.defer();
-          var result = LoginService.isLoggedIn(null, function (response) {
-            console.log(response);
-            if(!response.authenticated) {
-              defer.resolve();
-            }else{
-              defer.reject("logged_in");
-            }
-          });
-          return defer.promise;
+        load: ["$q", "Permissions", function ($q, Permissions) {
+          return Permissions.cantBeLoggedIn();
         }]
       }
     });

@@ -4,22 +4,14 @@
 
 'use strict';
 
-angular.module('todo.TodoModule', ['ngRoute', 'ui.bootstrap'])
+angular.module('todo.TodoModule', ['ngRoute', 'ui.bootstrap', "todo.PermissionModule"])
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/todo', {
       templateUrl: 'templates/todo.html',
       controller: 'TodoCtrl',
       resolve: {
-        load: ["$q", "LoginService", function ($q, LoginService) {
-          var defer = $q.defer();
-          var result = LoginService.isLoggedIn(null, function (response) {
-            if(response.authenticated) {
-              defer.resolve();
-            }else{
-              defer.reject("not_logged_in");
-            }
-          });
-          return defer.promise;
+        load: ["$q", "Permissions", function ($q, Permissions) {
+          return Permissions.mustBeLoggedIn();
         }]
       }
     });
