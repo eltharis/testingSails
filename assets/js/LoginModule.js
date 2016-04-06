@@ -16,16 +16,17 @@ angular.module('todo.LoginModule', ['ngRoute', 'ngResource', 'ui.bootstrap', 'to
       }
     });
   }])
-  .controller('LoginCtrl', ['$scope', '$rootScope', '$location', 'LoginService', function ($scope, $rootScope, $location, LoginService) {
+  .controller('LoginCtrl', ['$scope', '$rootScope', '$location', 'User', function ($scope, $rootScope, $location, User) {
 
     $scope.formData = {};
 
     $scope.login = function () {
-      var user = LoginService.login($scope.formData);
-      $location.path('/todo');
+      User.login($scope.formData, function(response) {
+        $location.path('/todo');
+      });
     }
   }])
-  .service('LoginService', ['$resource', function ($resource) {
+  .service('User', ['$resource', function ($resource) {
     return $resource('/auth/', null,
       {
         'isLoggedIn': {

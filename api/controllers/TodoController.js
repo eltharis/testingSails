@@ -7,7 +7,7 @@
 
 module.exports = {
 	getTodos: function(req, res) {
-    TodoService.getTodos(function(todos) {
+    Todo.getTodos(function(todos) {
       res.json(todos);
     });
     console.log("getTodos");
@@ -15,7 +15,7 @@ module.exports = {
 
   addTodo: function(req, res) {
     var todoVal = (req.body.value) ? req.body.value : undefined;
-    TodoService.addTodo(todoVal, function(success) {
+    Todo.addTodo(todoVal, function(success) {
       res.json(success);
     });
     console.log("addTodo");
@@ -23,7 +23,7 @@ module.exports = {
 
   removeTodo: function(req, res) {
     var todoVal = (req.body.value) ? req.body.value : undefined;
-    TodoService.removeTodo(todoVal, function(success) {
+    Todo.removeTodo(todoVal, function(success) {
       res.json(success);
     });
     console.log("removeTodo");

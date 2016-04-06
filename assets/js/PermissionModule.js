@@ -3,11 +3,11 @@
  */
 
 angular.module("todo.PermissionModule", ['todo.LoginModule'])
-  .factory("Permissions", ['$q', 'LoginService', function ($q, LoginService) {
+  .factory("Permissions", ['$q', 'User', function ($q, User) {
     return {
       mustBeLoggedIn: function () {
         var defer = $q.defer();
-        LoginService.isLoggedIn(null, function (response) {
+        User.isLoggedIn(null, function (response) {
           if(response.authenticated) {
             defer.resolve();
           } else {
@@ -19,7 +19,7 @@ angular.module("todo.PermissionModule", ['todo.LoginModule'])
 
       cantBeLoggedIn: function () {
         var defer = $q.defer();
-        LoginService.isLoggedIn(null, function (response) {
+        User.isLoggedIn(null, function (response) {
           if(!response.authenticated) {
             defer.resolve();
           } else {

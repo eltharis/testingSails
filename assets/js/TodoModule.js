@@ -16,32 +16,32 @@ angular.module('todo.TodoModule', ['ngRoute', 'ui.bootstrap', "todo.PermissionMo
       }
     });
   }])
-  .controller('TodoCtrl', ['$scope', '$rootScope', '$location', 'LoginService', 'TodoService', function ($scope, $rootScope, $location, LoginService, TodoService) {
+  .controller('TodoCtrl', ['$scope', '$rootScope', '$location', 'User', 'Todo', function ($scope, $rootScope, $location, User, Todo) {
     $scope.formData = {};
     $scope.todos = [];
 
-    $scope.todos = TodoService.getTodos();
+    $scope.todos = Todo.getTodos();
 
     $scope.addTodo = function () {
-      TodoService.addTodo($scope.formData).$promise.then(function (response) {
+      Todo.addTodo($scope.formData).$promise.then(function (response) {
         $scope.todos.push($scope.formData);
         $scope.formData = {};
       });
     };
 
     $scope.removeTodo = function (todo) {
-      TodoService.removeTodo(todo).$promise.then(function (response) {
+      Todo.removeTodo(todo).$promise.then(function (response) {
         $scope.todos.splice($scope.todos.indexOf(todo), 1);
       });
     };
 
     $scope.logout = function () {
-      LoginService.logout(null, function (response) {
+      User.logout(null, function (response) {
         $location.path("/");
       });
     }
   }])
-  .service('TodoService', ['$resource', function ($resource) {
+  .service('Todo', ['$resource', function ($resource) {
     return $resource('/api/todo', null, {
       getTodos: {
         method: 'GET',
