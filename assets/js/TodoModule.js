@@ -64,9 +64,10 @@ angular.module('todo.TodoModule', ['ngRoute', 'ui.bootstrap'])
           value: '@value'
         }
       },
-      deleteTodo: {
+      removeTodo: {
         method: 'DELETE',
-        url: '/todo/deleteTodo',
+        url: '/todo/removeTodo',
+        isArray: true,
         params: {
           value: '@value'
         }
