@@ -13,7 +13,6 @@ angular.module('todo.TodoModule', ['ngRoute', 'ui.bootstrap'])
         load: ["$q", "LoginService", function ($q, LoginService) {
           var defer = $q.defer();
           var result = LoginService.isLoggedIn(null, function (response) {
-            console.log(response);
             if(response.authenticated) {
               defer.resolve();
             }else{
