@@ -1,0 +1,25 @@
+<div class="container" ng-controller="TodoCtrl as todo">
+  <div class="jumbotron">
+    <h1 align="center">
+      Todo Application
+      <button type="button" class="btn btn-info" ng-click="logout()">Wyloguj</button>
+    </h1>
+    <br>
+    <div id="todo-form" class="row">
+      <div class="col-sm-8 col-sm-offset-2 text-center">
+        <input type="text" placeholder="Enter todo" ng-model="formData.value">
+        <button type="button" class="btn btn-info" ng-click="addTodo()">Add todo!</button>
+      </div>
+    </div>
+  </div>
+  <div id="todo-list" class="row">
+    <div class="col-sm-4 col-sm-offset-4">
+      <div class="checkbox" ng-repeat="singleTodo in todos">
+        <label>
+          <input type="checkbox" ng-click="removeTodo(singleTodo)">
+          {{ singleTodo.value }}
+        </label>
+      </div>
+    </div>
+  </div>
+</div>

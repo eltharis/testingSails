@@ -19,6 +19,12 @@
 
 module.exports.policies = {
 
+  TodoController: {
+    getTodos: true,
+    addTodo: ["sessionAuth"],
+    removeTodo: ["sessionAuth"]
+  }
+
   /***************************************************************************
   *                                                                          *
   * Default policy for all controllers and actions (`true` allows public     *
